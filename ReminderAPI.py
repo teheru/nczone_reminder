@@ -1,6 +1,11 @@
 import urllib.request
 import json
 
+import ssl
+sslctx = ssl.create_default_context()
+sslctx.check_hostname = False
+sslctx.verify_mode = ssl.CERT_NONE
+
 class ReminderAPI:
     def __init__(self, api):
         self._login_callback = []
@@ -20,7 +25,7 @@ class ReminderAPI:
     
     def query_logged_in(self):
         try:
-            data = json.loads(urllib.request.urlopen(self._api_logged_in).read())
+            data = json.loads(urllib.request.urlopen(self._api_logged_in, context=sslctx).read())
         except:
             for fct in self._error_callback:
                 fct()
@@ -46,7 +51,7 @@ class ReminderAPI:
         lusername = username.lower()
 
         try:
-            data = json.loads(urllib.request.urlopen(self._api_matches).read())
+            data = json.loads(urllib.request.urlopen(self._api_matches, context=sslctx).read())
         except:
             for fct in self._error_callback:
                 fct()
