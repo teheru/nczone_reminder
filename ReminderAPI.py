@@ -1,4 +1,4 @@
-import urllib
+import urllib.request
 import json
 
 class ReminderAPI:
@@ -20,7 +20,7 @@ class ReminderAPI:
     
     def query_logged_in(self):
         try:
-            data = json.loads(urllib.urlopen(self._api_logged_in).read())
+            data = json.loads(urllib.request.urlopen(self._api_logged_in).read())
         except:
             for fct in self._error_callback:
                 fct()
@@ -46,7 +46,7 @@ class ReminderAPI:
         lusername = username.lower()
 
         try:
-            data = json.loads(urllib.urlopen(self._api_matches).read())
+            data = json.loads(urllib.request.urlopen(self._api_matches).read())
         except:
             for fct in self._error_callback:
                 fct()
@@ -82,7 +82,3 @@ class ReminderAPI:
     
     def register_error_callback(self, fct):
         self._error_callback.append(fct)
-
-if __name__ == '__main__':
-    api = ReminderAPI('http://192.168.178.30/app.php/nczone/api')
-    api.query_matches('teheru33')

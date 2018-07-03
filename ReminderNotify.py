@@ -1,18 +1,28 @@
-import gi
-gi.require_version('Notify', '0.7')
-from gi.repository import Notify
-import pygame
+import os
+MSWINDOWS = os.name == 'nt'
+
+from plyer import notification
+if MSWINDOWS:
+    import winsound
+else:
+    import pygame
 import time
 
 class ReminderNotify:
-    __login = 'login.ogg'
-    __logout = 'logout.ogg'
-    __draw = 'match.ogg'
-    __error = 'error.ogg'
+    if MSWINDOWS:
+        __login = 'login.wav'
+        __logout = 'logout.wav'
+        __draw = 'match.wav'
+        __error = 'error.wav'
+    else:
+        __login = 'login.ogg'
+        __logout = 'logout.ogg'
+        __draw = 'match.ogg'
+        __error = 'error.ogg'
 
     def __init__(self):
-        Notify.init('nC Zone Reminder')
-        pygame.init()
+        if not MSWINDOWS:
+            pygame.init()
     
     def sound(self, kind):
         if(kind == 'login'):
@@ -35,8 +45,11 @@ class ReminderNotify:
             self._message('Es ist ein Fehler aufgetreten!')
     
     def _message(self, message):
-        Notify.Notification.new('nC Zone Reminder', message).show()
+        notification.notify(title='nC Zone Reminder', message=message, app_name="nC Zone Reminder")
 
     def _sound(self, filename):
-        pygame.mixer.music.load(filename)
-        pygame.mixer.music.play()
+        if MSWINDOWS:
+            winsound.PlaySound(filename, winsound.SND_FILENAME)
+        else:
+            pygame.mixer.music.load(filename)
+            pygame.mixer.music.play()
