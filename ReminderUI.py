@@ -52,7 +52,7 @@ class ReminderUI:
     def _quit(self, source):
         for fct in self._quit_callback:
             fct()
-        exit(0)
+        raise SystemExit
     
     def register_change_callback(self, fct):
         self._change_callback.append(fct)
